@@ -1,6 +1,7 @@
 import streamlit as st
 import pickle
 import pandas as pd
+import lzma
 def recommend(movie):
     movie_index = movies[movies['title'] == movie].index[0]
     distances = similarity[movie_index]
@@ -10,7 +11,8 @@ def recommend(movie):
         recommended_movies.append(movies.iloc[i[0]].title)
     return  recommended_movies
 
-similarity = pickle.load(open('similarity.pkl', 'rb'))
+with lzma.open('similarity.pkl.xz', 'rb') as file:
+    similarity = pickle.load(file)
 movies_dict = pickle.load(open('movies.pkl', 'rb'))
 movies = pd.DataFrame(movies_dict)
 st.title('Movie Recommend System')
